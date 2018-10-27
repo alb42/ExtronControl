@@ -142,7 +142,7 @@ begin
   iod := nil;
   DevOpen := False;
   IORunning := False;
-  writeln(1);
+  //writeln(1);
   mp := CreateMsgPort;
   if not Assigned(Mp) then
   begin
@@ -150,14 +150,14 @@ begin
     Exit;
   end;
   //
-  writeln(2);
+  //writeln(2);
   io := PIOExtSer(CreateExtIO(mp, sizeof(TIOExtSer)));
   if not assigned(io) then
   begin
     Writeln('Cannot alloc io');
     Exit;
   end;
-  writeln(3);
+  //writeln(3);
   iod := Pointer(io);
   Res := OpenDevice(PChar(DeviceName), UnitNumber, iod,0);
   if Res <> 0 then
@@ -166,15 +166,15 @@ begin
     Exit;
   end;
   DevOpen := True;
-  writeln(4);
+  //writeln(4);
   io^.io_SerFlags := (io^.io_SerFlags or SERF_EOFMODE or SERF_XDISABLED) and (not SERF_PARTY_ON);
   io^.io_Baud := BaudRate;
   io^.io_TermArray.TermArray0 := TERMINATORA;
   io^.io_TermArray.TermArray1 := TERMINATORB;
   io^.IOSer.io_Command := SDCMD_SETPARAMS;
-  writeln(5);
+  //writeln(5);
   SendIO(iod);
-  writeln(6);
+  //writeln(6);
   t1 := GetTickCount;
   while CheckIO(iod) = nil do
   begin
@@ -184,7 +184,7 @@ begin
       Break;
     end;
   end;
-  writeln(7);
+  //writeln(7);
   if CheckIO(iod) = nil then
   begin
     Res := -1;
@@ -195,9 +195,9 @@ begin
     WaitIO(iod);
     Res := iod^.io_Error;
   end;
-  writeln(8);
+  //writeln(8);
 
-  writeln(9);
+  //writeln(9);
   if Res <> 0 then
   begin
     Writeln('Error set serial params ' + IntToStr(Res));
@@ -209,7 +209,7 @@ end;
 
 procedure TSerialStuff.FinishSerial;
 begin
-  writeln('finish serial');
+  //writeln('finish serial');
   {$ifdef HASAMIGA}
   if DevOpen and Assigned(iod) and (IORunning or Async) then
   begin
@@ -330,7 +330,7 @@ initialization
   end
   else
   begin
-    writeln('connected');
+    //writeln('connected');
     if ST.SendGetText('I') = '' then
     begin
       writeln('Extron DSC 301 HD not found.');
