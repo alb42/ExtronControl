@@ -11,4 +11,8 @@ lha: all
 	mkdir ExtronControl/Source
 	cp *.pas ExtronControl/Source
 	lha ao5 ExtronControl.lha ExtronControl
+	rm -rf ExtronControl
+	
+clean:
+	rm -rf amiga/*.ppu amiga/*.o mos/*.o mos/*.ppu *.lha ExtronAmiga ExtronMOS ExtronControl
 	
