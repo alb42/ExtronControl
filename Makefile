@@ -6,7 +6,9 @@ lha: all
 	rm -rf ExtronControl
 	mkdir ExtronControl
 	cp ExtronAmiga ExtronControl
+	cp ExtronControl.info ExtronControl/ExtronAmiga.info
 	cp ExtronMOS ExtronControl
+	cp ExtronControl.info ExtronControl/ExtronMOS.info
 	cp Readme.txt ExtronControl
 	mkdir ExtronControl/Source
 	cp *.pas ExtronControl/Source
