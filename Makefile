@@ -12,6 +12,8 @@ lha: all
 	cp Readme.txt ExtronControl
 	mkdir ExtronControl/Source
 	cp *.pas ExtronControl/Source
+	mkdir ExtronControl/rexx
+	cp rexx/* ExtronControl/rexx
 	lha ao5 ExtronControl.lha ExtronControl
 	rm -rf ExtronControl
 	
