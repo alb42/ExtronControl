@@ -4,7 +4,7 @@ interface
 uses
   MUIClass.Base, MUIClass.Window, MUIClass.Menu, MUIClass.Group, MUIClass.Area,
   MUIClass.Image,
-  serialunit, sysutils, MUI;
+  serialunit, sysutils, MUI, icon, workbench;
 
 {$define Debugout}
 
@@ -62,7 +62,7 @@ const
 			'1080p',       // 24
 			'2048x1080 2k' // 25
 			);
-
+  DefNames: array[0..2] of string = ('Composite', 'VGA', 'HDMI');
 
 type
   TWindow1 = class(TMUIWindow)
@@ -88,6 +88,7 @@ type
 	  ValidList: TValidList;
 	  FreezeBtn: TMUIButton;
 	  Exec: array[0..2] of TMUIButton;
+	  InputNames: array[0..2] of string;
     procedure Window1Show(Sender: TObject);
     procedure Switch1Click(Sender: TObject);
     procedure Switch2Click(Sender: TObject);
@@ -276,8 +277,47 @@ end;
 constructor TWindow1.Create;
 var
   Group: TMUIGroup;
+  Dobj: PDiskObject;
+  s: PChar;
+  i: Integer;
+  HideSwitch, HideResolution, HideAuto, HideTest, HideLock: Boolean;
 begin
   inherited;
+	
+	HideSwitch := False;
+	HideResolution := False;
+	HideAuto := False;
+	HideTest := False;
+	HideLock := False;
+	
+  for i := 0 to High(InputNames) do
+    InputNames[i] := DefNames[i];
+	// Options
+	DObj := GetDiskObject(ParamStr(0));
+	if Assigned(DObj) then
+	begin
+		try
+			for i := 0 to High(InputNames) do
+			begin	
+			  s := FindToolType(DObj^.do_ToolTypes, PChar('NAME' + IntToStr(i + 1)));
+		    if Assigned(s) or (Trim(s) = '') then
+				  InputNames[i] := s
+				else
+					InputNames[i] := DefNames[i];
+			end;
+			HideSwitch := Assigned(FindToolType(DObj^.do_ToolTypes, PChar('HIDESWITCH')));
+      HideResolution := Assigned(FindToolType(DObj^.do_ToolTypes, PChar('HIDERESOLUTION')));
+	    HideAuto := Assigned(FindToolType(DObj^.do_ToolTypes, PChar('HIDEAUTO')));
+	    HideTest := Assigned(FindToolType(DObj^.do_ToolTypes, PChar('HIDETEST')));
+	    HideLock := Assigned(FindToolType(DObj^.do_ToolTypes, PChar('HIDELOCK')));
+	
+		finally
+		  FreeDiskobject(DObj);
+		end;
+	end;
+	
+	
+	
 	ValidList := TValidList.Create;
 	ValidList.Add(10, 0, 5);
 	ValidList.Add(11, 0, 7);
@@ -371,12 +411,13 @@ begin
     Horiz := True;
     SameWidth := True;
     Parent := Self;
+		ShowMe := not HideSwitch;
   end;
 
   Switch1 := TMUIButton.Create;
   with Switch1 do
   begin
-    Contents := '1: Composite';
+    Contents := '1: ' + InputNames[0];
     InputMode := MUIV_InputMode_Immediate;
     OnSelected := @Switch1Click;
     Parent := Group1;
@@ -385,7 +426,7 @@ begin
   Switch2 := TMUIButton.Create;
   with Switch2 do
   begin
-    Contents := '2: VGA';
+    Contents := '2: ' + InputNames[1];
     InputMode := MUIV_InputMode_Immediate;
     OnSelected := @Switch2Click;
     Parent := Group1;
@@ -394,7 +435,7 @@ begin
   Switch3 := TMUIButton.Create;
   with Switch3 do
   begin
-    Contents := '3: HDMI';
+    Contents := '3: ' + InputNames[2];
     InputMode := MUIV_InputMode_Immediate;
     OnSelected := @Switch3Click;
     Parent := Group1;
@@ -405,6 +446,7 @@ begin
   begin
     Horiz := True;
     Parent := Self;
+		ShowMe := not HideResolution;
   end;
   
   with TMUIText.Create('Output resolution:') do
@@ -453,6 +495,7 @@ begin
   begin
     Horiz := True;
     Parent := Self;
+		ShowMe := not HideAuto;
   end;
 
   with TMUIText.Create('Auto input:') do
@@ -489,6 +532,7 @@ begin
   begin
     Horiz := True;
     Parent := Self;
+		ShowMe := not HideTest;
   end;
 
   with TMUIText.Create('Test Patterns:') do
@@ -520,6 +564,7 @@ begin
   begin
     Horiz := True;
     Parent := Self;
+		ShowMe := not HideLock;
   end;
 	
 	with TMUIText.Create('Lock Buttons:') do

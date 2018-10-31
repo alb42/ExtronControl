@@ -4,7 +4,7 @@ interface
 uses
   Classes, SysUtils, Types, syncobjs,
   {$ifdef HASAMIGA}
-  Exec, AmigaDos,
+  Exec, AmigaDos, workbench, icon,
   {$endif}
   Math, dateutils;
 
@@ -318,8 +318,36 @@ begin
   end;
 end;
 
+procedure GetSettings();
+var
+  DObj: PDiskObject;
+  s: PChar;
+begin
+  // Options
+	DObj := GetDiskObject(ParamStr(0));
+	if Assigned(DObj) then
+	begin
+		try
+			s := FindToolType(DObj^.do_ToolTypes, PChar('DEVICE'));
+		  if Assigned(s) then
+				DeviceName := s;
+		  s := FindToolType(DObj^.do_ToolTypes, PChar('UNIT'));
+		  if Assigned(s) then
+				UnitNumber := StrToIntDef(s, UnitNumber);
+			s := FindToolType(DObj^.do_ToolTypes, PChar('BAUD'));
+		  if Assigned(s) then
+				BaudRate := StrToIntDef(s, BaudRate);
+		finally
+		  FreeDiskobject(DObj);
+		end;
+	end;
+		
+end;
+
 
 initialization
+  GetSettings();
+
   ST := TSerialStuff.Create;
   ST.Initserial;
   if not ST.InitDone then
