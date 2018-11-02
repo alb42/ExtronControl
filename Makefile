@@ -10,11 +10,12 @@ lha: all
 	cp ExtronMOS ExtronControl
 	cp ExtronMOS.info ExtronControl/ExtronMOS.info
 	cp Readme.txt ExtronControl
+	cp Readme.txt.info ExtronControl
 	mkdir ExtronControl/Source
 	cp *.pas ExtronControl/Source
 	mkdir ExtronControl/rexx
 	cp rexx/* ExtronControl/rexx
-	lha ao5 ExtronControl.lha ExtronControl
+	lha ao5 ExtronControl.lha ExtronControl ExtronControl.info 
 	rm -rf ExtronControl
 	
 clean:
