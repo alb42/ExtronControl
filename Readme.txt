@@ -52,5 +52,9 @@ for the needed number
 
 example script are included in the rexx folder.
 
+Requirements
+Amiga: 68020+ and OS3.0+ AmigaOS MUI 3.8
+MorphOS: 3.8+
+
 Source included, GUI created used MUIIDE and MUIClass
 Licence: CC0

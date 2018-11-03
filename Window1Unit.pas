@@ -385,7 +385,7 @@ begin
       for i := 0 to High(InputNames) do
       begin
         s := FindToolType(DObj^.do_ToolTypes, PChar('NAME' + IntToStr(i + 1)));
-        if Assigned(s) or (Trim(s) = '') then
+        if Assigned(s) and (Trim(s) <> '') then
           InputNames[i] := s
         else
           InputNames[i] := DefNames[i];
