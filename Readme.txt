@@ -53,8 +53,15 @@ for the needed number
 example script are included in the rexx folder.
 
 Requirements
+Extron DSC 301 HD
+
 Amiga: 68020+ and OS3.0+ AmigaOS MUI 3.8
 MorphOS: 3.8+
+
+Free USB or serial port.
+if connected via USB and does not automatically connect
+you have to force the the 0th endpoint (Class 2 Abstract Control(Modem)) to cdcacm.class
+and then use usbmodem.device for connection
 
 Source included, GUI created used MUIIDE and MUIClass
 Licence: CC0
